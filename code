@@ -1,1 +1,62 @@
+import torch
+from torch import nn
 
+#生成数据
+x = torch.tensor([
+    [1.0],
+    [2.0],
+    [3.0],
+    [4.0]
+])
+y = torch.tensor([
+    [2.0],
+    [4.0],
+    [6.0],
+    [8.0]
+])
+
+#定义神经网络
+net = nn.Sequential(
+    nn.Linear(1, 1)
+)
+
+#损失函数
+loss = nn.MSELoss()
+
+#优化器
+optimizer = torch.optim.SGD(
+    net.parameters(),
+    lr=0.01
+)
+
+#训练
+for epoch in range(100):
+
+    #前向传播
+    y_hat = net(x)
+
+    #计算loss
+    l = loss(y_hat, y)
+
+    #梯度清零
+    optimizer.zero_grad()
+
+    #反向传播
+    l.backward()
+
+    #更新参数
+    optimizer.step()
+
+    #输出
+    if (epoch + 1) % 10 == 0:
+        print(f'epoch {epoch+1}')
+        print('预测值:')
+        print(y_hat)
+        print('loss:')
+        print(l.item())
+
+#查看参数
+print("训练后的参数:")
+
+for param in net.parameters():
+    print(param)
